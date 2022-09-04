@@ -1,1 +1,4 @@
 /API Serverless crypto scraper.pdf
+/node_modules
+.env
+/.vscode
