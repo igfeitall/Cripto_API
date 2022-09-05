@@ -9,7 +9,9 @@ routes.get('/', (req, res) =>{
 })
 
 // test post
-routes.post('/token', tokenController.create)
-routes.get('/token', tokenController.list)
+routes.post('/tokens', tokenController.create)
+routes.get('/tokens', tokenController.list)
+routes.get('/tokens/:id', tokenController.get)
+routes.delete('/tokens/:id', tokenController.delete)
 
 export default routes

@@ -10,11 +10,13 @@ class tokenController{
     try {
 
       const newToken = await addItem(token)
-      res.json(newToken)
+      return res.json(newToken)
+
     } catch (error) {
 
       console.error(error)
-      res.status(500).json({ error: 'Something went wrong in database, try again later' })
+      return res.status(500).json({ error: 'Something went wrong in database, try again later' })
+
     }
   }
 
@@ -24,12 +26,52 @@ class tokenController{
     try {
 
       const tokenList = await listAll()
-      res.json(tokenList)
+      return res.json(tokenList)
+
     } catch (error) {
 
       console.log(error);
-      res.status(500).json({ error: 'Something went wrong in database, try again later' })
+      return res.status(500).json({ error: 'Something went wrong in database, try again later' })
+
     }
+  }
+
+  async get(req, res){
+
+    const tokenId = req.param.id
+
+    // connection
+    try {
+      
+      const token = await getById(tokenId)
+      return res.json(token)
+
+    } catch (error) {
+      
+      console.log(error);
+      return res.status(500).json({ error: 'Something went wrong in database, try again later' })
+
+    }
+
+  }
+
+  async delete(req, res){
+
+    const tokenId = req.param.id
+
+    // connection
+    try {
+      
+      const tokenDeleted = await deleteById(tokenId)
+      return res.json(tokenDeleted)
+
+    } catch (error) {
+      
+      console.log(error);
+      return res.status(500).json({ error: 'Something went wrong in database, try again later' })
+      
+    }
+
   }
 
 }

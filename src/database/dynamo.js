@@ -8,7 +8,7 @@ const getById = async (id) => {
       }
   }
 
-  return await dynamoClient.get(params).promise()
+  return dynamoClient.get(params).promise()
 }
 
 const listAll = async () => {
@@ -16,7 +16,7 @@ const listAll = async () => {
     TableName: TABLE_NAME
   }
 
-  return await dynamoClient.scan(params).promise()
+  return dynamoClient.scan(params).promise()
 }
 
 const deleteById = async (id) => {
@@ -27,7 +27,7 @@ const deleteById = async (id) => {
     }
   }
 
-  return await dynamoClient.delete(params).promise()
+  return dynamoClient.delete(params).promise()
 }
 
 const addItem = async (item) => {
@@ -36,7 +36,7 @@ const addItem = async (item) => {
     Item:item
   }
   
-  return await dynamoClient.put(params).promise()
+  return dynamoClient.put(params).promise()
 }
 
 export default {getById, listAll, deleteById, addItem}
