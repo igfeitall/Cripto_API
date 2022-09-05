@@ -11,7 +11,7 @@ class tokenController{
 
       const newToken = await addItem(token)
       res.json(newToken)
-    } catch (err) {
+    } catch (error) {
 
       console.error(error)
       res.status(500).json({ error: 'Something went wrong in database, try again later' })
