@@ -39,7 +39,7 @@ class tokenController{
 
   async get(req, res){
 
-    const tokenId = req.params.id
+    const tokenId = Number(req.params.id)
     console.log(tokenId);
 
     // connection
@@ -59,7 +59,7 @@ class tokenController{
 
   async delete(req, res){
 
-    const tokenId = req.params.id
+    const tokenId = Number(req.params.id)
 
     // connection
     try {

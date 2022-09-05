@@ -5,10 +5,9 @@ const getById = async (id) => {
   const params = {
       TableName: Database.TABLE_NAME,
       Key: {
-          id,
+          id: id
       }
   }
-  console.log(id, 'inside DB');
 
   return dynamoClient.get(params).promise()
 }
@@ -25,7 +24,7 @@ const deleteById = async (id) => {
   const params = {
     TableName: Database.TABLE_NAME,
     Key: {
-      id,
+      id: id
     }
   }
 
