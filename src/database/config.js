@@ -1,21 +1,28 @@
 import AWS from 'aws-sdk'
 
-AWS.config.update({
-  region: process.env.AWS_REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-})
+class Database {
+  static TABLE_NAME = 'token'
 
-// AWS key logs
-AWS.config.getCredentials(function(err) {
-  if (err) console.log(err.stack); // credentials not loaded
-  else {
-    console.log("Access Key:", AWS.config.credentials.accessKeyId);
-    console.log("Secret Key:", AWS.config.credentials.secretAccessKey);
+  constructor() {
+    return new AWS.DynamoDB.DocumentClient()
   }
-})
 
-const dynamoClient = new AWS.DynamoDB.DocumentClient()
-const TABLE_NAME = 'token'
+  static config(){
+    AWS.config.update({
+      region: process.env.AWS_REGION,
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    })
 
-export default {dynamoClient, TABLE_NAME}
+    // AWS key logs
+    AWS.config.getCredentials(function(error) {
+      if (error) console.log(error.stack); // credentials not loaded
+      else {
+        console.log("Access Key:", AWS.config.credentials.accessKeyId);
+        console.log("Secret Key:", AWS.config.credentials.secretAccessKey);
+      }
+    })
+  }
+}
+
+export default Database
