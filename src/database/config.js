@@ -1,19 +1,17 @@
-import AWS from 'aws-sdk'
+const AWS = require('aws-sdk')
 
 class Database {
   static TABLE_NAME = 'token'
-
+  
   constructor() {
+    this.config()
+
     return new AWS.DynamoDB.DocumentClient()
   }
-
-  static config(){
-    AWS.config.update({
-      region: process.env.AWS_REGION,
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-    })
-
+  
+  config(){
+    
+    AWS.config.update({ region: process.env.AWS_REGION })
     // AWS key logs
     AWS.config.getCredentials(function(error) {
       if (error) console.log(error.stack); // credentials not loaded
@@ -24,5 +22,4 @@ class Database {
     })
   }
 }
-
-export default Database
+module.exports = Database

@@ -1,7 +1,5 @@
-import app from './app'
-import Database from './database/config'
-
 require('dotenv').config()
-Database.config()
+const app = require('./app')
+//const Database = require('./database/config')
 
 app.listen(3333)

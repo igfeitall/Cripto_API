@@ -1,5 +1,5 @@
-import { Router } from 'express'
-import tokenController from './controllers/tokenController'
+const { Router } = require('express')
+const tokenController = require('./controllers/tokenController')
 
 const routes = new Router()
 
@@ -14,4 +14,4 @@ routes.get('/tokens', tokenController.list)
 routes.get('/tokens/:id', tokenController.get)
 routes.delete('/tokens/:id', tokenController.delete)
 
-export default routes
+module.exports = routes

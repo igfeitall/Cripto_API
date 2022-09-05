@@ -1,4 +1,4 @@
-import {getById, listAll, deleteById, addItem} from '../database/dynamo'
+const {getById, listAll, deleteById, addItem} = require('../database/dynamo')
 
 class tokenController{
 
@@ -9,8 +9,8 @@ class tokenController{
     // connection
     try {
 
-      const newToken = await addItem(token)
-      return res.json(newToken)
+      await addItem(token)
+      return res.json(token)
 
     } catch (error) {
 
@@ -25,6 +25,7 @@ class tokenController{
     // connection
     try {
 
+      console.log('dentro do try');
       const tokenList = await listAll()
       return res.json(tokenList)
 
@@ -38,7 +39,8 @@ class tokenController{
 
   async get(req, res){
 
-    const tokenId = req.param.id
+    const tokenId = req.params.id
+    console.log(tokenId);
 
     // connection
     try {
@@ -57,7 +59,7 @@ class tokenController{
 
   async delete(req, res){
 
-    const tokenId = req.param.id
+    const tokenId = req.params.id
 
     // connection
     try {
@@ -69,11 +71,11 @@ class tokenController{
       
       console.log(error);
       return res.status(500).json({ error: 'Something went wrong in database, try again later' })
-      
+
     }
 
   }
 
 }
 
-export default new tokenController()
+module.exports = new tokenController()

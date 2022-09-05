@@ -1,4 +1,4 @@
-import Database from './config'
+const Database = require('./config')
 const dynamoClient = new Database()
 
 const getById = async (id) => {
@@ -8,6 +8,7 @@ const getById = async (id) => {
           id,
       }
   }
+  console.log(id, 'inside DB');
 
   return dynamoClient.get(params).promise()
 }
@@ -40,4 +41,4 @@ const addItem = async (item) => {
   return dynamoClient.put(params).promise()
 }
 
-export default {getById, listAll, deleteById, addItem}
+module.exports = {getById, listAll, deleteById, addItem}
