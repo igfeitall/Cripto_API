@@ -1,8 +1,9 @@
-import { dynamoClient, TABLE_NAME } from './config'
+import Database from './config'
+const dynamoClient = new Database()
 
 const getById = async (id) => {
   const params = {
-      TableName: TABLE_NAME,
+      TableName: Database.TABLE_NAME,
       Key: {
           id,
       }
@@ -13,7 +14,7 @@ const getById = async (id) => {
 
 const listAll = async () => {
   const params = {
-    TableName: TABLE_NAME
+    TableName: Database.TABLE_NAME
   }
 
   return dynamoClient.scan(params).promise()
@@ -21,7 +22,7 @@ const listAll = async () => {
 
 const deleteById = async (id) => {
   const params = {
-    TableName: TABLE_NAME,
+    TableName: Database.TABLE_NAME,
     Key: {
       id,
     }
@@ -32,7 +33,7 @@ const deleteById = async (id) => {
 
 const addItem = async (item) => {
   const params = {
-    TableName: TABLE_NAME,
+    TableName: Database.TABLE_NAME,
     Item:item
   }
   
