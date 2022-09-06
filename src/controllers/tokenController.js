@@ -117,8 +117,19 @@ class tokenController{
       tokens.map( async (token) => {
 
         const exchangeRate = rates[token.tokenId]
-        const evolutionRate = (exchangeRate-token.exchangeRate)/exchangeRate
+        const oldExchangeRate = token.exchangeRate
+        
+        // tratando valores 0
+        let evolutionRate = exchangeRate >= oldExchangeRate? 1. : -1.
+        if(!oldExchangeRate && !exchangeRate){
+          evolutionRate = 0.
+        }
+        if(oldExchangeRate){
+          evolutionRate = (exchangeRate-oldExchangeRate)/oldExchangeRate
+        }
+
         const obj = {tokenId: token.tokenId, timestamp, exchangeRate, evolutionRate}
+        console.log(obj);
 
         await addItem(obj)
       })

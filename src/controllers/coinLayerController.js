@@ -1,5 +1,4 @@
 const axios = require('axios')
-const file = require('./resEx.json');
 
 const link = "http://api.coinlayer.com/"
 
