@@ -1,12 +1,23 @@
+const axios = require('axios')
 const file = require('./resEx.json');
 
-// const ex = JSON.parse(file)
+const link = "http://api.coinlayer.com/"
 
 class coinLayer{
 
-  getLive(){
+  async getLive(){
+    const func = "live?access_key="
+    const fullUrl = link+func+process.env.COINLAYER_KEY
 
-    return {timestamp: file.timestamp, rates: file.rates}
+    try {
+      const response = await axios.get(fullUrl)
+
+      const data = response.data
+      return {timestamp: data.timestamp, rates: data.rates}
+
+    } catch (error) {
+      console.error(error)
+    }
   }
   
 }
