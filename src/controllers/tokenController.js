@@ -34,7 +34,7 @@ class tokenController{
     }
   }
 
-  // listing all tokens
+  // listing all tokens (incompleto)
   async list(req, res){
     // receber apenas o ultimo timestamp
 
@@ -52,7 +52,7 @@ class tokenController{
     }
   }
 
-  // get an history of a token
+  // get an history of a token (incompleto)
   async get(req, res){
 
     const tokenId = String(req.params.id)
@@ -95,8 +95,37 @@ class tokenController{
 
   }
 
-  // update
-  
+  // update incompleto
+  async update(req, res){
+
+    // fazer a query para o update
+    const tokens = "query"
+    const { timestamp, rates } = coinLayer.getLive()
+
+    // validation
+    
+    // connection
+    try {
+      
+      tokens.map( async (token) => {
+
+        const exchangeRate = rates[token.tokenId]
+        const evolutionRate = (exchangeRate-token.exchangeRate)/exchangeRate
+        const obj = {tokenId: token, timestamp, exchangeRate, evolutionRate}
+
+
+        console.log(obj);
+        await addItem(obj)
+        return res.status(200).json(obj)
+      })
+
+    } catch (error) {
+
+      console.error(error)
+      return res.status(500).json({ error: 'Something went wrong in database, try again later' })
+
+    }
+  }
 }
 
 module.exports = new tokenController()
