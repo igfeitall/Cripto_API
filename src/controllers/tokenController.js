@@ -1,5 +1,4 @@
-const {getById, listAll, deleteById, addItem} = require('../database/dynamo')
-const { getLive } = require('./coinLayerController')
+const {getById, listAll, listAllId, deleteById, addItem} = require('../database/dynamo')
 const coinLayer = require('./coinLayerController')
 
 class tokenController{
@@ -105,7 +104,8 @@ class tokenController{
   async update(req, res){
 
     // fazer a query para o update
-    const tokens = "query"
+    const data = await listAll()
+    const tokens = getUniqueToken(data)
     const { timestamp, rates } = await coinLayer.getLive()
 
     // validation
@@ -117,13 +117,12 @@ class tokenController{
 
         const exchangeRate = rates[token.tokenId]
         const evolutionRate = (exchangeRate-token.exchangeRate)/exchangeRate
-        const obj = {tokenId: token, timestamp, exchangeRate, evolutionRate}
+        const obj = {tokenId: token.tokenId, timestamp, exchangeRate, evolutionRate}
 
-
-        console.log(obj);
         await addItem(obj)
-        return res.status(200).json(obj)
       })
+      
+      return res.status(200).json({ updatedTokens: tokens })
 
     } catch (error) {
 
@@ -133,5 +132,29 @@ class tokenController{
     }
   }
 }
+
+function getUniqueToken(data){
+  const uniqueTokens = []
+  for (item of data.Items){
+    addUnique(uniqueTokens, { tokenId: item.tokenId, exchangeRate: item.exchangeRate})
+  }
+
+  return uniqueTokens
+}
+
+function addUnique(list, newItem){
+  let unique = true
+  for(item of list){
+    if(newItem.tokenId === item.tokenId){
+      unique = false
+      break
+    }
+  }
+
+  if(unique){
+    list.push(newItem)
+  }
+}
+
 
 module.exports = new tokenController()

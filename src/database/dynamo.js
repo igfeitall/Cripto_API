@@ -23,6 +23,27 @@ const listAll = async () => {
   return dynamoClient.scan(params).promise()
 }
 
+const listAllId = () => {
+  const params = {
+    TableName: Database.TABLE_NAME
+  }
+
+  const uniqueId = []
+  dynamoClient.scan(params, (error, data) => {
+    console.log(data);
+    if(error){
+      console.log(error);
+      return error
+    }
+    
+    for (item of data.Items){
+      addItem(uniqueId, { tokenId: item.tokenId, exchangeRate: item.exchangeRate})
+    }
+
+    return uniqueId
+  })
+}
+
 const deleteById = async (tokenId) => {
 
   const queryParams = {
@@ -69,6 +90,8 @@ const addItem = async (item) => {
   return dynamoClient.put(params).promise()
 }
 
+/// não deveria estar aqui
+
 function chunks(inputArray, perChunk) {
   return inputArray.reduce((all,one,i) => {
     const ch = Math.floor(i/perChunk); 
@@ -77,4 +100,4 @@ function chunks(inputArray, perChunk) {
  }, [])
 }
 
-module.exports = {getById, listAll, deleteById, addItem}
+module.exports = {getById, listAll, listAllId, deleteById, addItem}
