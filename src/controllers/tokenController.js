@@ -100,12 +100,11 @@ class tokenController{
 
   }
 
-  // update incompleto
+  // update all tokens
   async update(req, res){
 
-    // fazer a query para o update
-    const data = await listAll()
-    const tokens = getUniqueToken(data)
+    const dataAll = await listAll()
+    const tokens = getUniqueToken(dataAll)
     const { timestamp, rates } = await coinLayer.getLive()
 
     // validation
@@ -133,10 +132,18 @@ class tokenController{
   }
 }
 
+// return a list of the most recent tokens
 function getUniqueToken(data){
   const uniqueTokens = []
-  for (item of data.Items){
-    addUnique(uniqueTokens, { tokenId: item.tokenId, exchangeRate: item.exchangeRate})
+  for (let i = data.Items.length-1; i>=0; i--){
+    const item = data.Items[i]
+    const miliseconds = item.timestamp * 1000
+    const date = new Date(miliseconds).toLocaleString("en-US")
+
+    addUnique(uniqueTokens, { tokenId: item.tokenId, 
+                              timestamp: date,
+                              exchangeRate: item.exchangeRate,
+                              evolutionRate: item.evolutionRate})
   }
 
   return uniqueTokens
