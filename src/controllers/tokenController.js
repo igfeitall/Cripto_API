@@ -34,12 +34,13 @@ class tokenController{
     }
   }
 
+  // listing all tokens
   async list(req, res){
+    // receber apenas o ultimo timestamp
 
     // connection
     try {
 
-      console.log('dentro do try');
       const tokenList = await listAll()
       return res.json(tokenList)
 
@@ -51,10 +52,11 @@ class tokenController{
     }
   }
 
+  // get an history of a token
   async get(req, res){
 
-    const tokenId = Number(req.params.id)
-    console.log(tokenId);
+    const tokenId = String(req.params.id)
+    console.log(tokenId, typeof tokenId);
 
     // connection
     try {
@@ -71,15 +73,18 @@ class tokenController{
 
   }
 
+  // deleting all presence of an token
   async delete(req, res){
 
-    const tokenId = Number(req.params.id)
+    const tokenId = String(req.params.id)
+
+    // validation
 
     // connection
     try {
       
-      const tokenDeleted = await deleteById(tokenId)
-      return res.json(tokenDeleted)
+      await deleteById(tokenId)
+      return res.status(200).json({ ok: 'True'})
 
     } catch (error) {
       
@@ -90,6 +95,8 @@ class tokenController{
 
   }
 
+  // update
+  
 }
 
 module.exports = new tokenController()

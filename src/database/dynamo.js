@@ -1,15 +1,18 @@
 const Database = require('./config')
 const dynamoClient = new Database()
 
-const getById = async (id) => {
+const getById = async (tokenId) => {
+  const Limit = 5
   const params = {
       TableName: Database.TABLE_NAME,
-      Key: {
-          TokenId: id
-      }
-  }
+      KeyConditionExpression: 'tokenId = :id',
+      ExpressionAttributeValues: {
+        ':id': tokenId
+      },
+      Limit
+    }
 
-  return dynamoClient.get(params).promise()
+  return dynamoClient.query(params).promise()
 }
 
 const listAll = async () => {
@@ -20,15 +23,41 @@ const listAll = async () => {
   return dynamoClient.scan(params).promise()
 }
 
-const deleteById = async (id) => {
-  const params = {
+const deleteById = async (tokenId) => {
+
+  const queryParams = {
     TableName: Database.TABLE_NAME,
-    Key: {
-      TokenId: id
-    }
+    KeyConditionExpression: 'tokenId = :id',
+    ExpressionAttributeValues: { ':id': tokenId }
   }
 
-  return dynamoClient.delete(params).promise()
+  const queryResults = await dynamoClient.query(queryParams).promise()
+  if (queryResults.Items && queryResults.Items.length > 0) {
+    
+    const batchCalls = chunks(queryResults.Items, 5).map( async (chunk) => {
+      const deleteRequests = chunk.map( item => {
+        return {
+          DeleteRequest : {
+            Key : {
+              'tokenId' : item.tokenId,
+              'timestamp' : item.timestamp,
+
+            }
+          }
+        }
+      })
+
+      const batchWriteParams = {
+        RequestItems : {
+          [Database.TABLE_NAME] : deleteRequests
+        }
+      }
+
+      await dynamoClient.batchWrite(batchWriteParams).promise()
+    })
+
+    await Promise.all(batchCalls)
+  }
 }
 
 const addItem = async (item) => {
@@ -38,6 +67,14 @@ const addItem = async (item) => {
   }
   
   return dynamoClient.put(params).promise()
+}
+
+function chunks(inputArray, perChunk) {
+  return inputArray.reduce((all,one,i) => {
+    const ch = Math.floor(i/perChunk); 
+    all[ch] = [].concat((all[ch]||[]),one); 
+    return all
+ }, [])
 }
 
 module.exports = {getById, listAll, deleteById, addItem}
