@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk')
 
 class Database {
-  static TABLE_NAME = 'token'
+  static TABLE_NAME = 'Tokens'
   
   constructor() {
     this.config()

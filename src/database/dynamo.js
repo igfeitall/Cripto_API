@@ -5,7 +5,7 @@ const getById = async (id) => {
   const params = {
       TableName: Database.TABLE_NAME,
       Key: {
-          id: id
+          TokenId: id
       }
   }
 
@@ -24,7 +24,7 @@ const deleteById = async (id) => {
   const params = {
     TableName: Database.TABLE_NAME,
     Key: {
-      id: id
+      TokenId: id
     }
   }
 

@@ -1,16 +1,30 @@
 const {getById, listAll, deleteById, addItem} = require('../database/dynamo')
+const coinLayer = require('./coinLayerController')
 
 class tokenController{
 
+  // adding new token
   async create(req, res){
 
-    const token = req.body
+    const { tokens } = req.body
+    const {timestamp, rates} = coinLayer.getLive()
+
+    // validation
     
     // connection
     try {
+      
+      tokens.map( async (token) => {
 
-      await addItem(token)
-      return res.json(token)
+        const exchangeRate = rates[token]
+        const evolutionRate = 0
+        const obj = {tokenId: token, timestamp, exchangeRate, evolutionRate}
+
+
+        console.log(obj);
+        await addItem(obj)
+        return res.status(200).json(obj)
+      })
 
     } catch (error) {
 
