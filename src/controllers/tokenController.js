@@ -1,4 +1,4 @@
-const {getById, listAll, listAllId, deleteById, addItem} = require('../database/dynamo')
+const {getById, listAll, deleteById, addItem} = require('../database/dynamo')
 const coinLayer = require('./coinLayerController')
 
 class tokenController{
@@ -39,14 +39,16 @@ class tokenController{
     }
   }
 
-  // listing all tokens (incompleto)
+  // listing all tokens
   async list(req, res){
     // receber apenas o ultimo timestamp
 
     // connection
     try {
 
-      const tokenList = await listAll()
+      const dataAll = await listAll()
+      const tokenList = getUniqueToken(dataAll)
+
       return res.json(tokenList)
 
     } catch (error) {
@@ -57,7 +59,7 @@ class tokenController{
     }
   }
 
-  // get an history of a token (incompleto)
+  // get an history of a token
   async get(req, res){
 
     const tokenId = String(req.params.id)
@@ -103,14 +105,14 @@ class tokenController{
   // update all tokens
   async update(req, res){
 
-    const dataAll = await listAll()
-    const tokens = getUniqueToken(dataAll)
     const { timestamp, rates } = await coinLayer.getLive()
 
     // validation
     
     // connection
     try {
+      const dataAll = await listAll()
+      const tokens = getUniqueToken(dataAll)
       
       tokens.map( async (token) => {
 
